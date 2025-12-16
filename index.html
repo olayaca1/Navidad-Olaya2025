@@ -82,9 +82,8 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   try {
-    // ✅ URL del Web App (tu /exec)
-    // IMPORTANTE: si vuelves a "Deploy new version", esta URL puede cambiar si copiaste otra.
-    const API_URL = "https://script.google.com/macros/s/AKfycbwklF0LG-bl8uU3TW2pAz23BxDyYTcDy9UVhImiSda0rTLch7i2hOvQYzaa7QxVnDbAEw/exec";
+    // ✅ TU NUEVO DEPLOY (CORRECTO)
+    const API_URL = "https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
 
     // Nombres EXACTOS según tu Sheet
     const FAMILY = ["MariaC","Nathalia","Sebas","CarlosH","PAPA","Paola","Valeria","Juancho","Jaime","Luna","Mama Luna"];
@@ -99,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     }
 
-    // lista chips
+    // Lista chips
     plist.innerHTML = "";
     FAMILY.forEach(n=>{
       const c=document.createElement("div");
@@ -109,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       plist.appendChild(c);
     });
 
-    // ruleta
+    // Ruleta
     const ctx = canvas.getContext("2d");
     let rot=0, spinning=false, highlight=-1;
 
@@ -154,16 +153,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
 
-    // ✅ SOLO GET: consulta (get) y creación (spin)
+    // ✅ SOLO GET: (get) y (spin)
+    async function api(action, giver){
+      const url = `${API_URL}?action=${encodeURIComponent(action)}&giver=${encodeURIComponent(giver)}&ts=${Date.now()}`;
+      const r = await fetch(url, { cache:"no-store", redirect:"follow" });
+
+      // Si algo raro pasa, mostramos status
+      if(!r.ok){
+        throw new Error(`HTTP ${r.status} al consultar API`);
+      }
+      const j = await r.json();
+      return j;
+    }
+
     async function getOrCreateAssignment(giver){
-      const q1 = `${API_URL}?action=get&giver=${encodeURIComponent(giver)}`;
-      const r1 = await fetch(q1, { redirect:"follow", cache:"no-store" });
-      const j1 = await r1.json();
+      const j1 = await api("get", giver);
       if(j1.ok && j1.assignment) return j1.assignment;
 
-      const q2 = `${API_URL}?action=spin&giver=${encodeURIComponent(giver)}`;
-      const r2 = await fetch(q2, { redirect:"follow", cache:"no-store" });
-      const j2 = await r2.json();
+      const j2 = await api("spin", giver);
       if(!j2.ok) throw new Error(j2.error || "Error API");
       return j2.assignment;
     }
@@ -217,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }catch(err){
         spinning=false;
         spinBtn.disabled=false;
-        resultEl.textContent="ERROR: " + err.message;
+        resultEl.textContent="ERROR: " + (err && err.message ? err.message : err);
       }
     };
 
