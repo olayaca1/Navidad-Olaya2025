@@ -37,14 +37,9 @@
   .wheelWrap{text-align:center}
   .pointer{width:0;height:0;margin:0 auto 10px;border-left:14px solid transparent;border-right:14px solid transparent;border-top:22px solid #fff;filter:drop-shadow(0 10px 12px rgba(0,0,0,.35))}
   canvas{width:100%;max-width:420px;border-radius:50%;box-shadow:0 18px 45px rgba(0,0,0,.4);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}
-  .confetti{position:fixed;inset:0;pointer-events:none;display:none;overflow:hidden}
-  .confetti.show{display:block}
-  .piece{position:absolute;width:10px;height:16px;top:-20px;border-radius:3px;animation:fall 1.6s ease-in forwards;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}
-  @keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot));opacity:1}}
 </style>
 </head>
 <body>
-<div class="confetti" id="confetti"></div>
 
 <div class="wrap">
   <header>
@@ -87,10 +82,9 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   try {
-    // ======= TU API (ya publicada) =======
-    const API_URL = "https://script.google.com/macros/s/AKfycbwklF0LG-bl8uU3TW2pAz23BxDyYTcDy9UVhImiSda0rTLch7i2hOvQYzaa7QxVnDbAEw/exec";
+    // ✅ USAR googleusercontent (evita Failed to fetch / CORS)
+    const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiViYQa2NOP0iqlClLZKn6pDc6VJ3drqWY_CyueLbxh5g8Eu8QEfUHPH6b6TGEim0TdZX64e501dECIkCb6-K1z5oTZkL3TIJ4GYjWEsDgwRdQDFaXCm0vWrPScZEfwfjI4QOzbT2hlNJAgfcpB9RatOkTXSEqlUpXbRkhpvaPjtd9fTRjVkV1DbIk1RLISoiT4Wzi2_xDi6Hbwr2BZIJ91OAiFlpA4C1nGajy9sjZuUhnStIpxl6V5MHWKI07bkXOnPFuBBCb5Lc9uPdtktclJBAZF2RsweaQm6GoysV0hVYRoQOYBKDmp96AfO2pty08Wax8e&lib=MLWmX6e-8fZVMGdtlYipV63w30xOjTIVN";
 
-    // ======= Nombres EXACTOS según tu Sheet =======
     const FAMILY = ["MariaC","Nathalia","Sebas","CarlosH","PAPA","Paola","Valeria","Juancho","Jaime","Luna","Mama Luna"];
 
     const nameInput = document.getElementById("name");
@@ -99,23 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const plist     = document.getElementById("plist");
     const canvas    = document.getElementById("wheel");
 
-    // ✅ Si falta algún ID, lo mostramos en pantalla (para que no quede “en blanco”)
-    const missing = [];
-    if(!nameInput) missing.push("name");
-    if(!spinBtn) missing.push("spinBtn");
-    if(!resultEl) missing.push("resultText");
-    if(!plist) missing.push("plist");
-    if(!canvas) missing.push("wheel");
-    if(missing.length){
-      alert("Faltan IDs en el HTML: " + missing.join(", "));
-      return;
-    }
-
     function normalize(s){
       return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     }
 
-    // ---- PINTAR LISTA DE PARTICIPANTES (chips) ----
+    // chips
     plist.innerHTML = "";
     FAMILY.forEach(n=>{
       const c=document.createElement("div");
@@ -125,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
       plist.appendChild(c);
     });
 
-    // ---- RULETA ----
+    // wheel
     const ctx = canvas.getContext("2d");
     let rot=0, spinning=false, highlight=-1;
 
@@ -166,21 +148,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ctx.restore();
     }
-
-    // ✅ Dibujar apenas cargue
     drawWheel(rot);
 
     function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
 
+    // ✅ GET/POST sin bloqueo (nota: API_URL ya tiene '?', por eso usamos '&')
     async function getOrCreateAssignment(giver){
-      const q = `${API_URL}?action=get&giver=${encodeURIComponent(giver)}`;
-      const r1 = await fetch(q);
+      const q = `${API_URL}&action=get&giver=${encodeURIComponent(giver)}`;
+      const r1 = await fetch(q, { redirect:"follow", cache:"no-store" });
       const j1 = await r1.json();
       if(j1.ok && j1.assignment) return j1.assignment;
 
       const r2 = await fetch(API_URL, {
         method:"POST",
-        headers:{ "Content-Type":"application/json" },
+        redirect:"follow",
+        cache:"no-store",
+        headers:{ "Content-Type":"text/plain;charset=utf-8" },
         body: JSON.stringify({ giver })
       });
       const j2 = await r2.json();
@@ -188,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return j2.assignment;
     }
 
-    // ---- GIRAR ----
     spinBtn.onclick = async ()=>{
       if(spinning) return;
 
