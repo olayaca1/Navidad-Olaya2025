@@ -82,9 +82,11 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   try {
-    // ✅ USAR googleusercontent (evita Failed to fetch / CORS)
-    const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiViYQa2NOP0iqlClLZKn6pDc6VJ3drqWY_CyueLbxh5g8Eu8QEfUHPH6b6TGEim0TdZX64e501dECIkCb6-K1z5oTZkL3TIJ4GYjWEsDgwRdQDFaXCm0vWrPScZEfwfjI4QOzbT2hlNJAgfcpB9RatOkTXSEqlUpXbRkhpvaPjtd9fTRjVkV1DbIk1RLISoiT4Wzi2_xDi6Hbwr2BZIJ91OAiFlpA4C1nGajy9sjZuUhnStIpxl6V5MHWKI07bkXOnPFuBBCb5Lc9uPdtktclJBAZF2RsweaQm6GoysV0hVYRoQOYBKDmp96AfO2pty08Wax8e&lib=MLWmX6e-8fZVMGdtlYipV63w30xOjTIVN";
+    // ✅ URL del Web App (tu /exec)
+    // IMPORTANTE: si vuelves a "Deploy new version", esta URL puede cambiar si copiaste otra.
+    const API_URL = "https://script.google.com/macros/s/AKfycbwklF0LG-bl8uU3TW2pAz23BxDyYTcDy9UVhImiSda0rTLch7i2hOvQYzaa7QxVnDbAEw/exec";
 
+    // Nombres EXACTOS según tu Sheet
     const FAMILY = ["MariaC","Nathalia","Sebas","CarlosH","PAPA","Paola","Valeria","Juancho","Jaime","Luna","Mama Luna"];
 
     const nameInput = document.getElementById("name");
@@ -97,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     }
 
-    // chips
+    // lista chips
     plist.innerHTML = "";
     FAMILY.forEach(n=>{
       const c=document.createElement("div");
@@ -107,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
       plist.appendChild(c);
     });
 
-    // wheel
+    // ruleta
     const ctx = canvas.getContext("2d");
     let rot=0, spinning=false, highlight=-1;
 
@@ -152,20 +154,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
 
-    // ✅ GET/POST sin bloqueo (nota: API_URL ya tiene '?', por eso usamos '&')
+    // ✅ SOLO GET: consulta (get) y creación (spin)
     async function getOrCreateAssignment(giver){
-      const q = `${API_URL}&action=get&giver=${encodeURIComponent(giver)}`;
-      const r1 = await fetch(q, { redirect:"follow", cache:"no-store" });
+      const q1 = `${API_URL}?action=get&giver=${encodeURIComponent(giver)}`;
+      const r1 = await fetch(q1, { redirect:"follow", cache:"no-store" });
       const j1 = await r1.json();
       if(j1.ok && j1.assignment) return j1.assignment;
 
-      const r2 = await fetch(API_URL, {
-        method:"POST",
-        redirect:"follow",
-        cache:"no-store",
-        headers:{ "Content-Type":"text/plain;charset=utf-8" },
-        body: JSON.stringify({ giver })
-      });
+      const q2 = `${API_URL}?action=spin&giver=${encodeURIComponent(giver)}`;
+      const r2 = await fetch(q2, { redirect:"follow", cache:"no-store" });
       const j2 = await r2.json();
       if(!j2.ok) throw new Error(j2.error || "Error API");
       return j2.assignment;
@@ -233,4 +230,3 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
-
