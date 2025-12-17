@@ -6,120 +6,275 @@
 <title>FAMILIA OLAYA – Regalo Secreto</title>
 
 <style>
-:root{--bg1:#071027;--bg2:#0b3b2a;--text:#fff;--card:rgba(255,255,255,.10);--shadow:0 22px 55px rgba(0,0,0,.45)}
+:root{
+  --bg1:#071027;
+  --bg2:#0b3b2a;
+  --text:#fff;
+  --muted:rgba(255,255,255,.72);
+  --card:rgba(255,255,255,.10);
+  --card2:rgba(255,255,255,.06);
+  --shadow:0 22px 55px rgba(0,0,0,.45);
+  --radius:22px;
+}
 *{box-sizing:border-box}
 body{
-  margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#fff;
+  margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
   background:
     radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.10), transparent 55%),
     radial-gradient(900px 700px at 80% 40%, rgba(255,255,255,.08), transparent 60%),
     linear-gradient(160deg,var(--bg1),var(--bg2));
 }
-.wrap{max-width:980px;margin:auto;padding:18px}
+.wrap{max-width:1020px;margin:auto;padding:18px}
 header{
-  background:linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
-  border-radius:22px;padding:14px;box-shadow:var(--shadow);
-  display:flex;gap:12px;align-items:center
+  background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+  border-radius:var(--radius);
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+  display:flex;gap:12px;align-items:center;
 }
-.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.15);font-size:26px}
-.grid{margin-top:14px;display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
-@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.logo{
+  width:52px;height:52px;border-radius:18px;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.14);
+  font-size:28px;
+}
+header h1{margin:0;font-size:18px;letter-spacing:1px}
+header p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+
+.grid{margin-top:14px;display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+
 .card{
-  background:linear-gradient(180deg,var(--card),rgba(255,255,255,.05));
-  border-radius:22px;box-shadow:var(--shadow);
-  padding:16px;position:relative;min-height:520px;overflow:hidden
+  background:linear-gradient(180deg,var(--card),var(--card2));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px;
+  position:relative;
+  min-height:560px;
+  overflow:hidden;
 }
-button{
-  padding:12px 16px;border-radius:14px;border:0;cursor:pointer;font-weight:900;
-  background:linear-gradient(135deg,#6bffb3,#b6ffea)
+.sectionTitle{
+  margin:0 0 8px;
+  font-size:14px;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.9);
 }
-button:disabled{opacity:.6;cursor:not-allowed}
-.bigResult{
-  margin-top:12px;border-radius:18px;padding:14px;
-  background:linear-gradient(135deg, rgba(107,255,179,.18), rgba(255,255,255,.06));
-  min-height:120px
+.help{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.35}
+
+.selectPanel{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.20);
+  border-radius:18px;
+  padding:12px;
 }
-.resultLine{margin-top:6px;font-size:clamp(20px,5vw,34px);font-weight:950}
-.receiver{
-  display:inline-block;padding:6px 12px;border-radius:14px;
-  background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);
-  position:relative;animation:bombZoom .9s ease-out forwards
+.selectedLine{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
 }
-.receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:25px}
-@keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1.2)}}
-.participants{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,.25);border-radius:16px;padding:10px}
-.list{display:flex;flex-wrap:wrap;gap:6px}
+.badge{
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(107,255,179,.18);
+  border:1px solid rgba(182,255,234,.45);
+}
+.selectedName{
+  font-weight:950;
+  letter-spacing:.6px;
+  font-size:14px;
+}
+
+.list{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  max-height:210px;
+  overflow:auto;
+  padding-right:6px;
+}
 .chip{
-  padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.14);cursor:pointer
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  cursor:pointer;
+  user-select:none;
+  transition:transform .08s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+  font-weight:800;
+  letter-spacing:.2px;
 }
-.chip.selected{background:rgba(107,255,179,.3)}
-.hidden{display:none}
+.chip:hover{transform:scale(1.03)}
+.chip.selected{
+  background:linear-gradient(135deg, rgba(107,255,179,.20), rgba(182,255,234,.12));
+  border-color:rgba(182,255,234,.70);
+  box-shadow:0 14px 30px rgba(0,0,0,.25);
+}
+
+.actionArea{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+.spinBtn{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:0;
+  cursor:pointer;
+  font-weight:950;
+  letter-spacing:.7px;
+  background:linear-gradient(135deg,#6bffb3,#b6ffea);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+  position:relative;
+}
+.spinBtn::after{
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius:18px;
+  background:radial-gradient(400px 120px at 30% 40%, rgba(182,255,234,.35), transparent 55%);
+  opacity:.8;
+  pointer-events:none;
+}
+.spinBtn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+
+.bigResult{
+  border-radius:18px;
+  padding:14px;
+  background:linear-gradient(135deg, rgba(107,255,179,.16), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.12);
+  min-height:130px;
+}
+.bigResult h3{
+  margin:0;
+  font-size:12px;
+  letter-spacing:1px;
+  color:rgba(255,255,255,.9);
+}
+.resultLine{
+  margin-top:8px;
+  font-size:clamp(20px,4.4vw,34px);
+  font-weight:950;
+  text-shadow:0 14px 30px rgba(0,0,0,.45);
+  line-height:1.12;
+}
+.receiver{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:14px;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.18);
+  position:relative;
+  animation:bombZoom .9s ease-out forwards;
+}
+.receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:24px}
+@keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1.2)}}
+
 .wheelWrap{text-align:center}
 .pointer{
-  width:0;height:0;margin:0 auto 10px;
-  border-left:14px solid transparent;border-right:14px solid transparent;
-  border-top:22px solid #fff
+  width:0;height:0;
+  margin: 0 auto 10px;
+  border-left:14px solid transparent;
+  border-right:14px solid transparent;
+  border-top:22px solid #fff;
+  filter:drop-shadow(0 10px 12px rgba(0,0,0,.35));
 }
-canvas{width:100%;max-width:420px;border-radius:50%;box-shadow:0 18px 45px rgba(0,0,0,.4)}
+canvas{
+  width:100%;
+  max-width:440px;
+  border-radius:50%;
+  box-shadow:0 18px 45px rgba(0,0,0,.4);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+}
 
+.hidden{display:none!important}
+
+/* Confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
 .confetti span{
   position:absolute;width:10px;height:14px;opacity:.9;
-  animation:fall 2.2s ease-out forwards
+  animation:fall 2.2s ease-out forwards;
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,.25));
 }
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(720deg);opacity:0}
-}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 </style>
 </head>
 
 <body>
-
 <div class="confetti" id="confetti"></div>
 
 <div class="wrap">
-<header>
-  <div class="logo">🎁</div>
-  <div>
-    <h2>FAMILIA OLAYA</h2>
-    <p>Regalo Secreto 2025</p>
-  </div>
-</header>
+  <header>
+    <div class="logo">🎁</div>
+    <div>
+      <h1>FAMILIA OLAYA</h1>
+      <p>Regalo Secreto 2025 – selecciona tu nombre y gira la ruleta 🎡</p>
+    </div>
+  </header>
 
-<div class="grid">
-<section class="card">
-  <button id="spinBtn" disabled>🎡 GIRAR RULETA</button>
-  <div class="bigResult">
-    <div class="resultLine" id="resultText">Selecciona tu nombre</div>
-  </div>
-  <div class="participants" id="panel">
-    <div class="list" id="plist"></div>
-  </div>
-</section>
+  <div class="grid">
+    <!-- IZQUIERDA -->
+    <section class="card">
+      <div class="sectionTitle">Paso 1</div>
+      <p class="help">Selecciona tu nombre (solo una vez). Cuando termine la ruleta, la lista se oculta para que no puedas escoger otro nombre.</p>
 
-<section class="card wheelWrap">
-  <div class="pointer"></div>
-  <canvas id="wheel" width="520" height="520"></canvas>
-</section>
-</div>
+      <div class="selectPanel" id="panel">
+        <div class="selectedLine">
+          <span class="badge">Seleccionado</span>
+          <span class="selectedName" id="selectedName">Ninguno</span>
+        </div>
+
+        <div class="list" id="plist"></div>
+      </div>
+
+      <div class="sectionTitle" style="margin-top:14px">Paso 2</div>
+      <p class="help">Pulsa el botón y disfruta el show 😄</p>
+
+      <div class="actionArea">
+        <button class="spinBtn" id="spinBtn" disabled>🎡 GIRAR RULETA</button>
+
+        <div class="bigResult">
+          <h3>RESULTADO</h3>
+          <div class="resultLine" id="resultText">Elige tu nombre para comenzar</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DERECHA -->
+    <section class="card wheelWrap">
+      <div class="sectionTitle">Ruleta</div>
+      <div class="pointer"></div>
+      <canvas id="wheel" width="520" height="520"></canvas>
+      <p class="help" style="margin-top:10px">🎄 Tip: Si ya jugaste, el servidor te devuelve el mismo resultado.</p>
+    </section>
+  </div>
 </div>
 
 <script>
+/* ================== CONFIG ================== */
 const API_URL="https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
 const FAMILY=["MariaC","Nathalia","Viviana","CarlosH","CarlosA","Paola","Valeria","Juanito","Jaime","Luna","Freddy","Sebas"];
 
+/* ================== UI ================== */
 const spinBtn=document.getElementById("spinBtn");
 const resultEl=document.getElementById("resultText");
 const plist=document.getElementById("plist");
 const panel=document.getElementById("panel");
+const selectedNameEl=document.getElementById("selectedName");
+
 const canvas=document.getElementById("wheel");
 const ctx=canvas.getContext("2d");
 const confetti=document.getElementById("confetti");
 
-let selected="",spinning=false,rot=0;
+let selected="", selectedChip=null, spinning=false, rot=0;
 
-// 🔊 Sonido ruleta tipo casino (clic-clic)
+/* ================== SOUND ================== */
+// 🎰 Sonido ruleta tipo casino (clic-clic)
 let audioCtx, clickInterval;
 function startSound(){
   audioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -141,22 +296,22 @@ function stopSound(){
 }
 // 🎉 Sonido final festivo
 function playWinSound(){
-  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const c=new (window.AudioContext||window.webkitAudioContext)();
   [880,1175,1568].forEach((f,i)=>{
-    const o=ctx.createOscillator();
-    const g=ctx.createGain();
-    o.type="sine";o.frequency.value=f;g.gain.value=0.15;
-    o.connect(g);g.connect(ctx.destination);
-    o.start(ctx.currentTime+i*0.12);
-    o.stop(ctx.currentTime+i*0.12+0.4);
+    const o=c.createOscillator();
+    const g=c.createGain();
+    o.type="sine"; o.frequency.value=f; g.gain.value=0.15;
+    o.connect(g); g.connect(c.destination);
+    o.start(c.currentTime+i*0.12);
+    o.stop(c.currentTime+i*0.12+0.4);
   });
-  setTimeout(()=>ctx.close(),1000);
+  setTimeout(()=>c.close(),1000);
 }
 
-// 🎊 Confetti
+/* ================== CONFETTI ================== */
 function boom(){
   confetti.innerHTML="";
-  for(let i=0;i<120;i++){
+  for(let i=0;i<140;i++){
     const s=document.createElement("span");
     s.style.left=Math.random()*100+"vw";
     s.style.background=`hsl(${Math.random()*360},90%,60%)`;
@@ -164,76 +319,151 @@ function boom(){
   }
 }
 
-function drawWheel(a){
+/* ================== WHEEL ================== */
+function drawWheel(a, hi=-1){
   const r=canvas.width/2;
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.save();ctx.translate(r,r);ctx.rotate(a);
+  ctx.save(); ctx.translate(r,r); ctx.rotate(a);
   const ang=2*Math.PI/FAMILY.length;
+
   FAMILY.forEach((n,i)=>{
-    ctx.beginPath();ctx.moveTo(0,0);
-    ctx.arc(0,0,r*0.9,i*ang,(i+1)*ang);
+    const isHi=i===hi;
+    const radius=isHi ? r*0.93 : r*0.90;
+
+    ctx.beginPath(); ctx.moveTo(0,0);
+    ctx.arc(0,0,radius,i*ang,(i+1)*ang);
     ctx.closePath();
-    ctx.fillStyle=`hsl(${i*360/FAMILY.length},80%,55%)`;
+
+    ctx.fillStyle=`hsl(${i*360/FAMILY.length},80%,${isHi? "62%":"55%"})`;
     ctx.fill();
-    ctx.save();ctx.rotate(i*ang+ang/2);
-    ctx.fillStyle="#fff";ctx.textAlign="right";
-    ctx.font="bold 15px system-ui";
-    ctx.fillText(n,r*0.85,6);
+
+    ctx.lineWidth=isHi?6:2;
+    ctx.strokeStyle=isHi?"rgba(255,255,255,.95)":"rgba(255,255,255,.22)";
+    ctx.stroke();
+
+    ctx.save();
+    ctx.rotate(i*ang+ang/2);
+    ctx.fillStyle="#fff";
+    ctx.textAlign="right";
+    ctx.font=isHi ? "900 18px system-ui" : "bold 16px system-ui";
+    ctx.fillText(n, radius*0.90, 6);
     ctx.restore();
   });
+
+  // centro
+  ctx.beginPath(); ctx.arc(0,0,56,0,Math.PI*2);
+  ctx.fillStyle="rgba(0,0,0,.22)";
+  ctx.fill();
+  ctx.lineWidth=2;
+  ctx.strokeStyle="rgba(255,255,255,.18)";
+  ctx.stroke();
+  ctx.fillStyle="rgba(255,255,255,.92)";
+  ctx.font="950 16px system-ui";
+  ctx.textAlign="center";
+  ctx.fillText("🎁 OLAYA", 0, 6);
+
   ctx.restore();
 }
 drawWheel(rot);
 
+/* ================== HELPERS ================== */
+function normalize(s){
+  return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
+
+async function api(action,g){
+  const r=await fetch(`${API_URL}?action=${action}&giver=${encodeURIComponent(g)}&t=${Date.now()}`, { cache:"no-store" });
+  if(!r.ok) throw new Error(`HTTP ${r.status} consultando API`);
+  return r.json();
+}
+async function getOrCreateAssignment(g){
+  const a=await api("get",g);
+  if(a.ok && a.assignment) return a.assignment;
+  const b=await api("spin",g);
+  if(!b.ok) throw new Error(b.error||"Error API");
+  return b.assignment;
+}
+
+/* ================== PARTICIPANTS ================== */
+plist.innerHTML="";
 FAMILY.forEach(n=>{
   const c=document.createElement("div");
   c.className="chip";
   c.textContent=n;
+
   c.onclick=()=>{
-    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("selected"));
+    if(spinning) return;
+
+    if(selectedChip) selectedChip.classList.remove("selected");
+    selectedChip=c;
     c.classList.add("selected");
+
     selected=n;
+    selectedNameEl.textContent=n;
     spinBtn.disabled=false;
-    resultEl.textContent="Ahora gira la ruleta 🎡";
+    resultEl.textContent="Listo. Ahora gira la ruleta 🎡";
   };
+
   plist.appendChild(c);
 });
 
-async function api(action,g){
-  const r=await fetch(`${API_URL}?action=${action}&giver=${encodeURIComponent(g)}&t=${Date.now()}`);
-  return r.json();
-}
-
+/* ================== SPIN ================== */
 spinBtn.onclick=async()=>{
   if(spinning) return;
-  spinning=true;spinBtn.disabled=true;
-  resultEl.textContent="Girando...";
-  startSound();
+  if(!selected){
+    alert("Selecciona tu nombre primero.");
+    return;
+  }
 
-  let r=await api("get",selected);
-  if(!r.assignment) r=await api("spin",selected);
-  const rec=r.assignment.receiver;
-  const idx=FAMILY.indexOf(rec);
+  try{
+    spinning=true;
+    spinBtn.disabled=true;
+    resultEl.textContent="Consultando servidor...";
+    startSound();
 
-  const ang=2*Math.PI/FAMILY.length;
-  const target=(idx+0.5)*ang;
-  const start=rot,end=rot+10*(2*Math.PI)+(Math.PI*1.5-target);
-  const t0=performance.now(),d=5200;
+    const assignment=await getOrCreateAssignment(selected);
+    const receiver=assignment.receiver;
 
-  (function anim(t){
-    const p=Math.min(1,(t-t0)/d);
-    rot=start+(end-start)*(1-Math.pow(1-p,5));
-    drawWheel(rot);
-    if(p<1) requestAnimationFrame(anim);
-    else{
-      stopSound();
-      playWinSound();
-      boom();
-      resultEl.innerHTML=`<b>${selected}</b> debe dar regalo a <span class="receiver">${rec}</span>`;
-      panel.classList.add("hidden");
-      spinning=false;
-    }
-  })(t0);
+    const idx=FAMILY.findIndex(n=>normalize(n)===normalize(receiver));
+    if(idx<0) throw new Error("El receptor devuelto por el servidor no está en la lista local.");
+
+    const ang=2*Math.PI/FAMILY.length;
+    const targetCenter=(idx+0.5)*ang;
+
+    const start=rot;
+    const end=rot + 10*(2*Math.PI) + (Math.PI*1.5 - targetCenter);
+    const dur=5200;
+    const t0=performance.now();
+
+    const anim=(now)=>{
+      const p=Math.min(1,(now-t0)/dur);
+      rot=start+(end-start)*easeOutQuint(p);
+      drawWheel(rot,-1);
+
+      if(p<1) requestAnimationFrame(anim);
+      else{
+        stopSound();
+        playWinSound();
+        drawWheel(rot,idx);
+        boom();
+
+        resultEl.innerHTML =
+          `<b>${selected.toUpperCase()}</b> debe dar regalo a <span class="receiver">${receiver.toUpperCase()}</span>`;
+
+        // ocultar lista (no pueden escoger otro)
+        panel.classList.add("hidden");
+        spinning=false;
+      }
+    };
+    requestAnimationFrame(anim);
+
+  }catch(err){
+    stopSound();
+    spinning=false;
+    spinBtn.disabled=false;
+    resultEl.textContent="ERROR: " + (err && err.message ? err.message : err);
+  }
 };
 </script>
 </body>
