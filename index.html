@@ -6,240 +6,217 @@
 <title>FAMILIA OLAYA – Regalo Secreto</title>
 
 <style>
-  :root{--bg1:#071027;--bg2:#0b3b2a;--text:#fff;--muted:rgba(255,255,255,.75);--card:rgba(255,255,255,.10);--shadow:0 22px 55px rgba(0,0,0,.45)}
-  *{box-sizing:border-box}
-  body{
-    margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
-    background:
-      radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.10), transparent 55%),
-      radial-gradient(900px 700px at 80% 40%, rgba(255,255,255,.08), transparent 60%),
-      linear-gradient(160deg,var(--bg1),var(--bg2));
-  }
-  .wrap{max-width:980px;margin:auto;padding:18px}
-  header{
-    background:linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
-    border-radius:22px;padding:14px;box-shadow:var(--shadow);
-    display:flex;gap:12px;align-items:center
-  }
-  .logo{
-    width:48px;height:48px;border-radius:16px;
-    display:grid;place-items:center;background:rgba(255,255,255,.15);font-size:26px
-  }
-  header h1{margin:0;font-size:18px;letter-spacing:1px}
-  header p{margin:0;font-size:13px;color:var(--muted)}
+:root{--bg1:#071027;--bg2:#0b3b2a;--text:#fff;--card:rgba(255,255,255,.10);--shadow:0 22px 55px rgba(0,0,0,.45)}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#fff;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.10), transparent 55%),
+    radial-gradient(900px 700px at 80% 40%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(160deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:980px;margin:auto;padding:18px}
+header{
+  background:linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
+  border-radius:22px;padding:14px;box-shadow:var(--shadow);
+  display:flex;gap:12px;align-items:center
+}
+.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.15);font-size:26px}
+.grid{margin-top:14px;display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{
+  background:linear-gradient(180deg,var(--card),rgba(255,255,255,.05));
+  border-radius:22px;box-shadow:var(--shadow);
+  padding:16px;position:relative;min-height:520px;overflow:hidden
+}
+button{
+  padding:12px 16px;border-radius:14px;border:0;cursor:pointer;font-weight:900;
+  background:linear-gradient(135deg,#6bffb3,#b6ffea)
+}
+button:disabled{opacity:.6;cursor:not-allowed}
+.bigResult{
+  margin-top:12px;border-radius:18px;padding:14px;
+  background:linear-gradient(135deg, rgba(107,255,179,.18), rgba(255,255,255,.06));
+  min-height:120px
+}
+.resultLine{margin-top:6px;font-size:clamp(20px,5vw,34px);font-weight:950}
+.receiver{
+  display:inline-block;padding:6px 12px;border-radius:14px;
+  background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);
+  position:relative;animation:bombZoom .9s ease-out forwards
+}
+.receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:24px}
+@keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1.2)}}
+.participants{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,.25);border-radius:16px;padding:10px}
+.list{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.14);cursor:pointer
+}
+.chip.selected{background:rgba(107,255,179,.3)}
+.hidden{display:none}
+.wheelWrap{text-align:center}
+.pointer{
+  width:0;height:0;margin:0 auto 10px;
+  border-left:14px solid transparent;border-right:14px solid transparent;
+  border-top:22px solid #fff
+}
+canvas{width:100%;max-width:420px;border-radius:50%;box-shadow:0 18px 45px rgba(0,0,0,.4)}
 
-  .grid{margin-top:14px;display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
-  @media(max-width:860px){.grid{grid-template-columns:1fr}}
-
-  .card{
-    background:linear-gradient(180deg,var(--card),rgba(255,255,255,.05));
-    border-radius:22px;box-shadow:var(--shadow);
-    padding:16px;position:relative;min-height:520px;overflow:hidden
-  }
-
-  .help{font-size:13px;color:var(--muted);margin:0 0 10px}
-
-  button{
-    padding:12px 16px;border-radius:14px;border:0;cursor:pointer;font-weight:900;
-    background:linear-gradient(135deg,#6bffb3,#b6ffea)
-  }
-  button:disabled{opacity:.55;cursor:not-allowed}
-
-  .bigResult{
-    margin-top:12px;border-radius:18px;padding:14px;
-    background:linear-gradient(135deg, rgba(107,255,179,.18), rgba(255,255,255,.06));
-    min-height:120px
-  }
-  .resultLine{
-    margin-top:6px;font-size:clamp(20px,5vw,34px);
-    font-weight:950;text-shadow:0 14px 30px rgba(0,0,0,.45)
-  }
-
-  .receiver{
-    display:inline-block;padding:6px 12px;border-radius:14px;
-    background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);
-    position:relative;animation:bombZoom 1s ease-out forwards
-  }
-  .receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:24px}
-  @keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1.2)}}
-
-  .participants{
-    position:absolute;bottom:12px;left:12px;right:12px;
-    background:rgba(0,0,0,.25);border-radius:16px;padding:10px;
-    border:1px solid rgba(255,255,255,.14)
-  }
-  .participants h4{
-    margin:0 0 6px;font-size:12px;text-transform:uppercase;color:rgba(255,255,255,.85)
-  }
-
-  .list{display:flex;flex-wrap:wrap;gap:6px;max-height:140px;overflow:auto}
-
-  .chip{
-    padding:7px 10px;font-size:12px;border-radius:999px;
-    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);
-    cursor:pointer;user-select:none
-  }
-  .chip.selected{
-    background:rgba(107,255,179,.22);
-    border-color:rgba(182,255,234,.7)
-  }
-
-  .wheelWrap{text-align:center}
-  .pointer{
-    width:0;height:0;margin:0 auto 10px;
-    border-left:14px solid transparent;border-right:14px solid transparent;
-    border-top:22px solid #fff
-  }
-  canvas{
-    width:100%;max-width:420px;border-radius:50%;
-    box-shadow:0 18px 45px rgba(0,0,0,.4);
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)
-  }
-
-  .hidden{display:none!important}
+.confetti{
+  position:fixed;inset:0;pointer-events:none;overflow:hidden
+}
+.confetti span{
+  position:absolute;width:10px;height:14px;opacity:.9;
+  animation:fall 2.2s ease-out forwards
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
 </style>
 </head>
 
 <body>
 
+<div class="confetti" id="confetti"></div>
+
 <div class="wrap">
-  <header>
-    <div class="logo">🎁</div>
-    <div>
-      <h1>FAMILIA OLAYA</h1>
-      <p>Regalo Secreto 2025 – cada persona juega una sola vez</p>
-    </div>
-  </header>
-
-  <div class="grid">
-    <section class="card">
-      <h2>👤 Selecciona tu nombre</h2>
-      <p class="help">Toca tu nombre y luego gira la ruleta. Al finalizar, la lista desaparecerá.</p>
-
-      <button id="spinBtn" disabled>🎡 GIRAR RULETA</button>
-
-      <div class="bigResult">
-        <div class="resultLine" id="resultText">Selecciona tu nombre para empezar</div>
-      </div>
-
-      <div class="participants" id="participantsPanel">
-        <h4>Participantes</h4>
-        <div class="list" id="plist"></div>
-      </div>
-    </section>
-
-    <section class="card wheelWrap">
-      <h2>🎄 Ruleta</h2>
-      <div class="pointer"></div>
-      <canvas id="wheel" width="520" height="520"></canvas>
-    </section>
+<header>
+  <div class="logo">🎁</div>
+  <div>
+    <h2>FAMILIA OLAYA</h2>
+    <p>Regalo Secreto 2025</p>
   </div>
+</header>
+
+<div class="grid">
+<section class="card">
+  <button id="spinBtn" disabled>🎡 GIRAR RULETA</button>
+  <div class="bigResult">
+    <div class="resultLine" id="resultText">Selecciona tu nombre</div>
+  </div>
+  <div class="participants" id="panel">
+    <div class="list" id="plist"></div>
+  </div>
+</section>
+
+<section class="card wheelWrap">
+  <div class="pointer"></div>
+  <canvas id="wheel" width="520" height="520"></canvas>
+</section>
+</div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+const API_URL="https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
+const FAMILY=["MariaC","Nathalia","Viviana","CarlosH","CarlosA","Paola","Valeria","Juanito","Jaime","Luna","Freddy","Sebas"];
 
-  const API_URL =
-    "https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
+const spinBtn=document.getElementById("spinBtn");
+const resultEl=document.getElementById("resultText");
+const plist=document.getElementById("plist");
+const panel=document.getElementById("panel");
+const canvas=document.getElementById("wheel");
+const ctx=canvas.getContext("2d");
+const confetti=document.getElementById("confetti");
 
-  // ✅ LISTA ACTUALIZADA
-  const FAMILY = [
-    "MariaC",
-    "Nathalia",
-    "Viviana",
-    "CarlosH",
-    "CarlosA",
-    "Paola",
-    "Valeria",
-    "Juanito",
-    "Jaime",
-    "Luna",
-    "Freddy",
-    "Sebas"
-  ];
+let selected="",spinning=false,rot=0;
 
-  const spinBtn = document.getElementById("spinBtn");
-  const resultEl = document.getElementById("resultText");
-  const plist = document.getElementById("plist");
-  const panel = document.getElementById("participantsPanel");
-  const canvas = document.getElementById("wheel");
-  const ctx = canvas.getContext("2d");
+// 🔊 Sonido ruleta (Web Audio)
+let audioCtx,osc;
+function startSound(){
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  osc=audioCtx.createOscillator();
+  osc.frequency.value=420;
+  osc.type="square";
+  osc.connect(audioCtx.destination);
+  osc.start();
+}
+function stopSound(){
+  if(osc){osc.stop();osc.disconnect()}
+  if(audioCtx){audioCtx.close()}
+}
 
-  let selected="", spinning=false, rot=0;
-
-  function norm(s){
-    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+// 🎉 Confetti
+function boom(){
+  confetti.innerHTML="";
+  for(let i=0;i<120;i++){
+    const s=document.createElement("span");
+    s.style.left=Math.random()*100+"vw";
+    s.style.background=`hsl(${Math.random()*360},90%,60%)`;
+    confetti.appendChild(s);
   }
+}
 
-  FAMILY.forEach(n=>{
-    const c=document.createElement("div");
-    c.className="chip";
-    c.textContent=n;
-    c.onclick=()=>{
-      document.querySelectorAll(".chip").forEach(x=>x.classList.remove("selected"));
-      c.classList.add("selected");
-      selected=n;
-      spinBtn.disabled=false;
-      resultEl.textContent="Listo. Ahora gira la ruleta 🎡";
-    };
-    plist.appendChild(c);
-  });
-
-  function drawWheel(angle, hi=-1){
-    const r=canvas.width/2;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.save();ctx.translate(r,r);ctx.rotate(angle);
-    const a=2*Math.PI/FAMILY.length;
-    FAMILY.forEach((n,i)=>{
-      ctx.beginPath();ctx.moveTo(0,0);
-      ctx.arc(0,0,r*0.9,i*a,(i+1)*a);ctx.closePath();
-      ctx.fillStyle=`hsl(${i*360/FAMILY.length},80%,55%)`;
-      ctx.fill();
-      ctx.save();ctx.rotate(i*a+a/2);
-      ctx.fillStyle="#fff";ctx.textAlign="right";
-      ctx.font="bold 15px system-ui";
-      ctx.fillText(n,r*0.85,6);
-      ctx.restore();
-    });
+function drawWheel(a){
+  const r=canvas.width/2;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();ctx.translate(r,r);ctx.rotate(a);
+  const ang=2*Math.PI/FAMILY.length;
+  FAMILY.forEach((n,i)=>{
+    ctx.beginPath();ctx.moveTo(0,0);
+    ctx.arc(0,0,r*0.9,i*ang,(i+1)*ang);
+    ctx.closePath();
+    ctx.fillStyle=`hsl(${i*360/FAMILY.length},80%,55%)`;
+    ctx.fill();
+    ctx.save();ctx.rotate(i*ang+ang/2);
+    ctx.fillStyle="#fff";ctx.textAlign="right";
+    ctx.font="bold 15px system-ui";
+    ctx.fillText(n,r*0.85,6);
     ctx.restore();
-  }
-  drawWheel(rot);
+  });
+  ctx.restore();
+}
+drawWheel(rot);
 
-  async function api(action,g){
-    const u=`${API_URL}?action=${action}&giver=${encodeURIComponent(g)}&t=${Date.now()}`;
-    const r=await fetch(u,{cache:"no-store"});
-    return r.json();
-  }
-
-  spinBtn.onclick=async()=>{
-    if(spinning) return;
-    spinning=true; spinBtn.disabled=true;
-    resultEl.textContent="Consultando servidor...";
-
-    let r=await api("get",selected);
-    if(!r.assignment) r=await api("spin",selected);
-
-    const rec=r.assignment.receiver;
-    const idx=FAMILY.findIndex(n=>norm(n)===norm(rec));
-
-    const a=2*Math.PI/FAMILY.length;
-    const target=(idx+0.5)*a;
-    const start=rot,end=rot+10*(2*Math.PI)+(Math.PI*1.5-target);
-    const t0=performance.now(),d=5200;
-
-    (function anim(t){
-      const p=Math.min(1,(t-t0)/d);
-      rot=start+(end-start)*(1-Math.pow(1-p,5));
-      drawWheel(rot);
-      if(p<1) requestAnimationFrame(anim);
-      else{
-        drawWheel(rot);
-        resultEl.innerHTML=`<b>${selected}</b> debe dar regalo a <span class="receiver">${rec}</span>`;
-        panel.classList.add("hidden");
-      }
-    })(t0);
+FAMILY.forEach(n=>{
+  const c=document.createElement("div");
+  c.className="chip";
+  c.textContent=n;
+  c.onclick=()=>{
+    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("selected"));
+    c.classList.add("selected");
+    selected=n;
+    spinBtn.disabled=false;
+    resultEl.textContent="Ahora gira la ruleta 🎡";
   };
+  plist.appendChild(c);
 });
+
+async function api(action,g){
+  const r=await fetch(`${API_URL}?action=${action}&giver=${encodeURIComponent(g)}&t=${Date.now()}`);
+  return r.json();
+}
+
+spinBtn.onclick=async()=>{
+  if(spinning) return;
+  spinning=true; spinBtn.disabled=true;
+  resultEl.textContent="Girando...";
+  startSound();
+
+  let r=await api("get",selected);
+  if(!r.assignment) r=await api("spin",selected);
+  const rec=r.assignment.receiver;
+  const idx=FAMILY.indexOf(rec);
+
+  const ang=2*Math.PI/FAMILY.length;
+  const target=(idx+0.5)*ang;
+  const start=rot,end=rot+10*(2*Math.PI)+(Math.PI*1.5-target);
+  const t0=performance.now(),d=5200;
+
+  (function anim(t){
+    const p=Math.min(1,(t-t0)/d);
+    rot=start+(end-start)*(1-Math.pow(1-p,5));
+    drawWheel(rot);
+    if(p<1) requestAnimationFrame(anim);
+    else{
+      stopSound();
+      boom();
+      resultEl.innerHTML=`<b>${selected}</b> debe dar regalo a <span class="receiver">${rec}</span>`;
+      panel.classList.add("hidden");
+      spinning=false;
+    }
+  })(t0);
+};
 </script>
 </body>
 </html>
