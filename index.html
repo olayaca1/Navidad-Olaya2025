@@ -45,7 +45,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
   background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);
   position:relative;animation:bombZoom .9s ease-out forwards
 }
-.receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:24px}
+.receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:25px}
 @keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1.2)}}
 .participants{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,.25);border-radius:16px;padding:10px}
 .list{display:flex;flex-wrap:wrap;gap:6px}
@@ -63,9 +63,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
 }
 canvas{width:100%;max-width:420px;border-radius:50%;box-shadow:0 18px 45px rgba(0,0,0,.4)}
 
-.confetti{
-  position:fixed;inset:0;pointer-events:none;overflow:hidden
-}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
 .confetti span{
   position:absolute;width:10px;height:14px;opacity:.9;
   animation:fall 2.2s ease-out forwards
@@ -121,22 +119,41 @@ const confetti=document.getElementById("confetti");
 
 let selected="",spinning=false,rot=0;
 
-// 🔊 Sonido ruleta (Web Audio)
-let audioCtx,osc;
+// 🔊 Sonido ruleta tipo casino (clic-clic)
+let audioCtx, clickInterval;
 function startSound(){
   audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  osc=audioCtx.createOscillator();
-  osc.frequency.value=420;
-  osc.type="square";
-  osc.connect(audioCtx.destination);
-  osc.start();
+  clickInterval=setInterval(()=>{
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.type="triangle";
+    osc.frequency.value=900+Math.random()*400;
+    gain.gain.value=0.07;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime+0.03);
+  },90);
 }
 function stopSound(){
-  if(osc){osc.stop();osc.disconnect()}
-  if(audioCtx){audioCtx.close()}
+  clearInterval(clickInterval);
+  if(audioCtx){audioCtx.close();audioCtx=null}
+}
+// 🎉 Sonido final festivo
+function playWinSound(){
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  [880,1175,1568].forEach((f,i)=>{
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type="sine";o.frequency.value=f;g.gain.value=0.15;
+    o.connect(g);g.connect(ctx.destination);
+    o.start(ctx.currentTime+i*0.12);
+    o.stop(ctx.currentTime+i*0.12+0.4);
+  });
+  setTimeout(()=>ctx.close(),1000);
 }
 
-// 🎉 Confetti
+// 🎊 Confetti
 function boom(){
   confetti.innerHTML="";
   for(let i=0;i<120;i++){
@@ -189,7 +206,7 @@ async function api(action,g){
 
 spinBtn.onclick=async()=>{
   if(spinning) return;
-  spinning=true; spinBtn.disabled=true;
+  spinning=true;spinBtn.disabled=true;
   resultEl.textContent="Girando...";
   startSound();
 
@@ -210,6 +227,7 @@ spinBtn.onclick=async()=>{
     if(p<1) requestAnimationFrame(anim);
     else{
       stopSound();
+      playWinSound();
       boom();
       resultEl.innerHTML=`<b>${selected}</b> debe dar regalo a <span class="receiver">${rec}</span>`;
       panel.classList.add("hidden");
