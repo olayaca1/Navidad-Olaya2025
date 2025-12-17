@@ -16,27 +16,60 @@
   .logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.15);font-size:26px}
   header h1{margin:0;font-size:18px;letter-spacing:1px}
   header p{margin:0;font-size:13px;color:var(--muted)}
+
   .grid{margin-top:14px;display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
   @media(max-width:860px){.grid{grid-template-columns:1fr}}
+
   .card{background:linear-gradient(180deg,var(--card),rgba(255,255,255,.05));border-radius:22px;box-shadow:var(--shadow);padding:16px;position:relative;min-height:520px;overflow:hidden}
   .help{font-size:13px;color:var(--muted);margin:0 0 10px}
   .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
-  input{flex:1 1 240px;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.25);color:#fff;font-size:14px;outline:none}
-  button{padding:12px 16px;border-radius:14px;border:0;cursor:pointer;font-weight:900;background:linear-gradient(135deg,#6bffb3,#b6ffea);user-select:none}
-  button:disabled{opacity:.6;cursor:not-allowed}
+
+  button{
+    padding:12px 16px;border-radius:14px;border:0;cursor:pointer;font-weight:900;
+    background:linear-gradient(135deg,#6bffb3,#b6ffea);user-select:none
+  }
+  button:disabled{opacity:.55;cursor:not-allowed}
+
   .bigResult{margin-top:12px;border-radius:18px;padding:14px;background:linear-gradient(135deg, rgba(107,255,179,.18), rgba(255,255,255,.06));min-height:120px;position:relative;overflow:hidden}
   .bigResult h3{margin:0;font-size:13px;letter-spacing:1px;color:rgba(255,255,255,.9)}
   .resultLine{margin-top:6px;font-size:clamp(20px,5vw,34px);font-weight:950;text-shadow:0 14px 30px rgba(0,0,0,.45);line-height:1.1}
+
   .receiver{display:inline-block;padding:6px 12px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);position:relative;animation:bombZoom 1s ease-out forwards}
   .receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:24px}
   @keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1.2)}}
+
   .participants{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,.25);border-radius:16px;padding:10px;border:1px solid rgba(255,255,255,.14)}
   .participants h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;color:rgba(255,255,255,.85);letter-spacing:.5px}
-  .list{display:flex;flex-wrap:wrap;gap:6px;max-height:110px;overflow:auto;padding-right:6px}
-  .chip{padding:5px 9px;font-size:12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);cursor:pointer;user-select:none;white-space:nowrap}
+
+  .list{display:flex;flex-wrap:wrap;gap:6px;max-height:130px;overflow:auto;padding-right:6px}
+  .chip{
+    padding:7px 10px;font-size:12px;border-radius:999px;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);
+    cursor:pointer;user-select:none;white-space:nowrap;
+    transition:transform .08s ease, background .15s ease, border-color .15s ease;
+  }
+  .chip:hover{transform:scale(1.03)}
+  .chip.selected{
+    background:rgba(107,255,179,.22);
+    border-color:rgba(182,255,234,.7);
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+  }
+
   .wheelWrap{text-align:center}
   .pointer{width:0;height:0;margin:0 auto 10px;border-left:14px solid transparent;border-right:14px solid transparent;border-top:22px solid #fff;filter:drop-shadow(0 10px 12px rgba(0,0,0,.35))}
   canvas{width:100%;max-width:420px;border-radius:50%;box-shadow:0 18px 45px rgba(0,0,0,.4);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}
+
+  .pickedBox{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(0,0,0,.18);
+    font-size:13px;color:rgba(255,255,255,.92);
+  }
+  .pickedName{font-weight:950;letter-spacing:.6px}
+
+  .hidden{display:none !important}
 </style>
 </head>
 <body>
@@ -53,20 +86,23 @@
   <div class="grid">
     <section class="card">
       <h2>👤 Participante</h2>
-      <p class="help">Escribe tu nombre EXACTO (o tócalo en la lista). Si ya jugaste, te muestra tu resultado guardado.</p>
+      <p class="help">Toca tu nombre una sola vez. Luego gira la ruleta. Al finalizar, la lista desaparece para evitar que juegues con otro nombre.</p>
+
+      <div class="pickedBox" id="pickedBox">
+        Seleccionado: <span class="pickedName" id="pickedName">Ninguno</span>
+      </div>
 
       <div class="row">
-        <input id="name" placeholder="Tu nombre (ej: Sebas)"/>
-        <button id="spinBtn">🎡 GIRAR RULETA</button>
+        <button id="spinBtn" disabled>🎡 GIRAR RULETA</button>
       </div>
 
       <div class="bigResult">
         <h3>RESULTADO</h3>
-        <div class="resultLine" id="resultText">Aún no has girado</div>
+        <div class="resultLine" id="resultText">Selecciona tu nombre para empezar</div>
       </div>
 
-      <div class="participants">
-        <h4>📜 PARTICIPANTES</h4>
+      <div class="participants" id="participantsPanel">
+        <h4>📜 PARTICIPANTES (TOCA TU NOMBRE)</h4>
         <div class="list" id="plist"></div>
       </div>
     </section>
@@ -81,158 +117,166 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  try {
-    // ✅ TU NUEVO DEPLOY (CORRECTO)
-    const API_URL = "https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
+  // ✅ TU API
+  const API_URL = "https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
 
-    // Nombres EXACTOS según tu Sheet
-    const FAMILY = ["MariaC","Nathalia","Sebas","CarlosH","PAPA","Paola","Valeria","Juancho","Jaime","Luna","Mama Luna"];
+  // ✅ Nombres EXACTOS (igual que en Sheet participants)
+  const FAMILY = ["MariaC","Nathalia","Sebas","CarlosH","PAPA","Paola","Valeria","Juancho","Jaime","Luna","Mama Luna"];
 
-    const nameInput = document.getElementById("name");
-    const spinBtn   = document.getElementById("spinBtn");
-    const resultEl  = document.getElementById("resultText");
-    const plist     = document.getElementById("plist");
-    const canvas    = document.getElementById("wheel");
+  const spinBtn = document.getElementById("spinBtn");
+  const resultEl = document.getElementById("resultText");
+  const plist = document.getElementById("plist");
+  const canvas = document.getElementById("wheel");
+  const ctx = canvas.getContext("2d");
 
-    function normalize(s){
-      return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-    }
+  const pickedBox = document.getElementById("pickedBox");
+  const pickedNameEl = document.getElementById("pickedName");
+  const participantsPanel = document.getElementById("participantsPanel");
 
-    // Lista chips
-    plist.innerHTML = "";
-    FAMILY.forEach(n=>{
-      const c=document.createElement("div");
-      c.className="chip";
-      c.textContent=n;
-      c.onclick=()=>{ nameInput.value=n; nameInput.focus(); };
-      plist.appendChild(c);
-    });
+  let selectedGiver = "";
+  let selectedChip = null;
 
-    // Ruleta
-    const ctx = canvas.getContext("2d");
-    let rot=0, spinning=false, highlight=-1;
+  function normalize(s){
+    return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  }
 
-    function drawWheel(rotation, hiIdx=-1){
-      const r = canvas.width/2;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+  // ===== RUEDA =====
+  let rot=0, spinning=false;
+
+  function drawWheel(rotation, hiIdx=-1){
+    const r = canvas.width/2;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();
+    ctx.translate(r,r);
+    ctx.rotate(rotation);
+
+    const ang = 2*Math.PI / FAMILY.length;
+
+    for(let i=0;i<FAMILY.length;i++){
+      const start=i*ang, end=(i+1)*ang;
+      const isHi=i===hiIdx;
+      const radius=isHi ? r*0.93 : r*0.90;
+      const hue=i*360/FAMILY.length;
+
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.arc(0,0,radius,start,end);
+      ctx.closePath();
+      ctx.fillStyle=`hsl(${hue},80%,${isHi?"62%":"55%"})`;
+      ctx.fill();
+
+      ctx.lineWidth=isHi?6:2;
+      ctx.strokeStyle=isHi?"rgba(255,255,255,.95)":"rgba(255,255,255,.22)";
+      ctx.stroke();
+
       ctx.save();
-      ctx.translate(r,r);
-      ctx.rotate(rotation);
-
-      const ang = 2*Math.PI / FAMILY.length;
-
-      for(let i=0;i<FAMILY.length;i++){
-        const start=i*ang, end=(i+1)*ang;
-        const isHi=i===hiIdx;
-        const radius=isHi ? r*0.93 : r*0.90;
-        const hue=i*360/FAMILY.length;
-
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.arc(0,0,radius,start,end);
-        ctx.closePath();
-        ctx.fillStyle=`hsl(${hue},80%,${isHi?"62%":"55%"})`;
-        ctx.fill();
-
-        ctx.lineWidth=isHi?6:2;
-        ctx.strokeStyle=isHi?"rgba(255,255,255,.95)":"rgba(255,255,255,.22)";
-        ctx.stroke();
-
-        ctx.save();
-        ctx.rotate(start + ang/2);
-        ctx.fillStyle="#fff";
-        ctx.font=isHi?"900 18px system-ui":"bold 16px system-ui";
-        ctx.textAlign="right";
-        ctx.fillText(FAMILY[i], radius*0.92, 6);
-        ctx.restore();
-      }
-
+      ctx.rotate(start + ang/2);
+      ctx.fillStyle="#fff";
+      ctx.font=isHi?"900 18px system-ui":"bold 16px system-ui";
+      ctx.textAlign="right";
+      ctx.fillText(FAMILY[i], radius*0.92, 6);
       ctx.restore();
     }
-    drawWheel(rot);
 
-    function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
+    ctx.restore();
+  }
+  drawWheel(rot);
 
-    // ✅ SOLO GET: (get) y (spin)
-    async function api(action, giver){
-      const url = `${API_URL}?action=${encodeURIComponent(action)}&giver=${encodeURIComponent(giver)}&ts=${Date.now()}`;
-      const r = await fetch(url, { cache:"no-store", redirect:"follow" });
+  function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
 
-      // Si algo raro pasa, mostramos status
-      if(!r.ok){
-        throw new Error(`HTTP ${r.status} al consultar API`);
-      }
-      const j = await r.json();
-      return j;
-    }
+  async function api(action, giver){
+    const url = `${API_URL}?action=${encodeURIComponent(action)}&giver=${encodeURIComponent(giver)}&ts=${Date.now()}`;
+    const r = await fetch(url, { cache:"no-store", redirect:"follow" });
+    if(!r.ok) throw new Error(`HTTP ${r.status} consultando API`);
+    return r.json();
+  }
 
-    async function getOrCreateAssignment(giver){
-      const j1 = await api("get", giver);
-      if(j1.ok && j1.assignment) return j1.assignment;
+  async function getOrCreateAssignment(giver){
+    const j1 = await api("get", giver);
+    if(j1.ok && j1.assignment) return j1.assignment;
 
-      const j2 = await api("spin", giver);
-      if(!j2.ok) throw new Error(j2.error || "Error API");
-      return j2.assignment;
-    }
+    const j2 = await api("spin", giver);
+    if(!j2.ok) throw new Error(j2.error || "Error API");
+    return j2.assignment;
+  }
 
-    spinBtn.onclick = async ()=>{
-      if(spinning) return;
+  // ===== CHIPS: seleccionar nombre (sin input) =====
+  plist.innerHTML = "";
+  FAMILY.forEach(n=>{
+    const c=document.createElement("div");
+    c.className="chip";
+    c.textContent=n;
 
-      const giver=(nameInput.value||"").trim();
-      const giverN=normalize(giver);
+    c.onclick = () => {
+      if(spinning) return; // si está girando, no tocar
+      // marcar seleccionado
+      if(selectedChip) selectedChip.classList.remove("selected");
+      selectedChip = c;
+      c.classList.add("selected");
 
-      if(!FAMILY.map(normalize).includes(giverN)){
-        alert("Nombre no válido. Usa uno de la lista.");
-        return;
-      }
-
-      try{
-        spinBtn.disabled=true;
-        spinning=true;
-        highlight=-1;
-        resultEl.textContent="Consultando servidor...";
-
-        const assignment = await getOrCreateAssignment(giver);
-        const receiver = assignment.receiver;
-
-        const idx = FAMILY.findIndex(n => normalize(n)===normalize(receiver));
-        if(idx < 0) throw new Error("El receptor devuelto por el servidor no está en la lista local.");
-
-        const ang=2*Math.PI/FAMILY.length;
-        const targetCenter=(idx+0.5)*ang;
-
-        const start=rot;
-        const end=rot + 10*(2*Math.PI) + (Math.PI*1.5 - targetCenter);
-        const dur=5200;
-        const t0=performance.now();
-
-        const anim=(now)=>{
-          const p=Math.min(1,(now-t0)/dur);
-          rot=start+(end-start)*easeOutQuint(p);
-          drawWheel(rot,-1);
-          if(p<1) requestAnimationFrame(anim);
-          else{
-            highlight=idx;
-            drawWheel(rot,highlight);
-            resultEl.innerHTML = `<b>${giver.toUpperCase()}</b> debe dar regalo a <span class="receiver">${receiver.toUpperCase()}</span>`;
-            spinning=false;
-            spinBtn.disabled=false;
-          }
-        };
-        requestAnimationFrame(anim);
-
-      }catch(err){
-        spinning=false;
-        spinBtn.disabled=false;
-        resultEl.textContent="ERROR: " + (err && err.message ? err.message : err);
-      }
+      selectedGiver = n;
+      pickedNameEl.textContent = n;
+      spinBtn.disabled = false;
+      resultEl.textContent = "Listo. Ahora gira la ruleta 🎡";
     };
 
-  } catch (e) {
-    const r = document.getElementById("resultText");
-    if(r) r.textContent = "ERROR inicializando: " + e.message;
-    alert("ERROR inicializando: " + e.message);
-  }
+    plist.appendChild(c);
+  });
+
+  // ===== SPIN =====
+  spinBtn.onclick = async ()=>{
+    if(spinning) return;
+    if(!selectedGiver){
+      alert("Primero selecciona tu nombre.");
+      return;
+    }
+
+    try{
+      spinning=true;
+      spinBtn.disabled=true;
+      resultEl.textContent="Consultando servidor...";
+
+      const assignment = await getOrCreateAssignment(selectedGiver);
+      const receiver = assignment.receiver;
+
+      const idx = FAMILY.findIndex(n => normalize(n)===normalize(receiver));
+      if(idx < 0) throw new Error("El receptor devuelto por el servidor no está en la lista local.");
+
+      // giro 5+ segundos
+      const ang=2*Math.PI/FAMILY.length;
+      const targetCenter=(idx+0.5)*ang;
+      const start=rot;
+      const end=rot + 10*(2*Math.PI) + (Math.PI*1.5 - targetCenter);
+      const dur=5200;
+      const t0=performance.now();
+
+      const anim=(now)=>{
+        const p=Math.min(1,(now-t0)/dur);
+        rot=start+(end-start)*easeOutQuint(p);
+        drawWheel(rot,-1);
+        if(p<1) requestAnimationFrame(anim);
+        else{
+          drawWheel(rot,idx);
+
+          resultEl.innerHTML =
+            `<b>${selectedGiver.toUpperCase()}</b> debe dar regalo a <span class="receiver">${receiver.toUpperCase()}</span>`;
+
+          // ✅ ocultar lista de nombres para que NO puedan elegir otro
+          participantsPanel.classList.add("hidden");
+          pickedBox.innerHTML = `✅ Ya jugaste como <span class="pickedName">${selectedGiver}</span>. ¡Felices fiestas! 🎄`;
+
+          spinning=false;
+        }
+      };
+      requestAnimationFrame(anim);
+
+    }catch(err){
+      spinning=false;
+      spinBtn.disabled=false;
+      resultEl.textContent="ERROR: " + (err && err.message ? err.message : err);
+    }
+  };
+
 });
 </script>
 </body>
