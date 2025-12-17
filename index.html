@@ -4,74 +4,102 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>FAMILIA OLAYA – Regalo Secreto</title>
+
 <style>
   :root{--bg1:#071027;--bg2:#0b3b2a;--text:#fff;--muted:rgba(255,255,255,.75);--card:rgba(255,255,255,.10);--shadow:0 22px 55px rgba(0,0,0,.45)}
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
-    background:radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.10), transparent 55%),
-               radial-gradient(900px 700px at 80% 40%, rgba(255,255,255,.08), transparent 60%),
-               linear-gradient(160deg,var(--bg1),var(--bg2));}
+  body{
+    margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
+    background:
+      radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.10), transparent 55%),
+      radial-gradient(900px 700px at 80% 40%, rgba(255,255,255,.08), transparent 60%),
+      linear-gradient(160deg,var(--bg1),var(--bg2));
+  }
   .wrap{max-width:980px;margin:auto;padding:18px}
-  header{background:linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05));border-radius:22px;padding:14px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center}
-  .logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.15);font-size:26px}
+  header{
+    background:linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
+    border-radius:22px;padding:14px;box-shadow:var(--shadow);
+    display:flex;gap:12px;align-items:center
+  }
+  .logo{
+    width:48px;height:48px;border-radius:16px;
+    display:grid;place-items:center;background:rgba(255,255,255,.15);font-size:26px
+  }
   header h1{margin:0;font-size:18px;letter-spacing:1px}
   header p{margin:0;font-size:13px;color:var(--muted)}
 
   .grid{margin-top:14px;display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
   @media(max-width:860px){.grid{grid-template-columns:1fr}}
 
-  .card{background:linear-gradient(180deg,var(--card),rgba(255,255,255,.05));border-radius:22px;box-shadow:var(--shadow);padding:16px;position:relative;min-height:520px;overflow:hidden}
+  .card{
+    background:linear-gradient(180deg,var(--card),rgba(255,255,255,.05));
+    border-radius:22px;box-shadow:var(--shadow);
+    padding:16px;position:relative;min-height:520px;overflow:hidden
+  }
+
   .help{font-size:13px;color:var(--muted);margin:0 0 10px}
-  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
 
   button{
     padding:12px 16px;border-radius:14px;border:0;cursor:pointer;font-weight:900;
-    background:linear-gradient(135deg,#6bffb3,#b6ffea);user-select:none
+    background:linear-gradient(135deg,#6bffb3,#b6ffea)
   }
   button:disabled{opacity:.55;cursor:not-allowed}
 
-  .bigResult{margin-top:12px;border-radius:18px;padding:14px;background:linear-gradient(135deg, rgba(107,255,179,.18), rgba(255,255,255,.06));min-height:120px;position:relative;overflow:hidden}
-  .bigResult h3{margin:0;font-size:13px;letter-spacing:1px;color:rgba(255,255,255,.9)}
-  .resultLine{margin-top:6px;font-size:clamp(20px,5vw,34px);font-weight:950;text-shadow:0 14px 30px rgba(0,0,0,.45);line-height:1.1}
+  .bigResult{
+    margin-top:12px;border-radius:18px;padding:14px;
+    background:linear-gradient(135deg, rgba(107,255,179,.18), rgba(255,255,255,.06));
+    min-height:120px
+  }
+  .resultLine{
+    margin-top:6px;font-size:clamp(20px,5vw,34px);
+    font-weight:950;text-shadow:0 14px 30px rgba(0,0,0,.45)
+  }
 
-  .receiver{display:inline-block;padding:6px 12px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);position:relative;animation:bombZoom 1s ease-out forwards}
+  .receiver{
+    display:inline-block;padding:6px 12px;border-radius:14px;
+    background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);
+    position:relative;animation:bombZoom 1s ease-out forwards
+  }
   .receiver::after{content:"💥";position:absolute;top:-22px;right:-22px;font-size:24px}
   @keyframes bombZoom{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1.2)}}
 
-  .participants{position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,.25);border-radius:16px;padding:10px;border:1px solid rgba(255,255,255,.14)}
-  .participants h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;color:rgba(255,255,255,.85);letter-spacing:.5px}
+  .participants{
+    position:absolute;bottom:12px;left:12px;right:12px;
+    background:rgba(0,0,0,.25);border-radius:16px;padding:10px;
+    border:1px solid rgba(255,255,255,.14)
+  }
+  .participants h4{
+    margin:0 0 6px;font-size:12px;text-transform:uppercase;color:rgba(255,255,255,.85)
+  }
 
-  .list{display:flex;flex-wrap:wrap;gap:6px;max-height:130px;overflow:auto;padding-right:6px}
+  .list{display:flex;flex-wrap:wrap;gap:6px;max-height:140px;overflow:auto}
+
   .chip{
     padding:7px 10px;font-size:12px;border-radius:999px;
     background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);
-    cursor:pointer;user-select:none;white-space:nowrap;
-    transition:transform .08s ease, background .15s ease, border-color .15s ease;
+    cursor:pointer;user-select:none
   }
-  .chip:hover{transform:scale(1.03)}
   .chip.selected{
     background:rgba(107,255,179,.22);
-    border-color:rgba(182,255,234,.7);
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
+    border-color:rgba(182,255,234,.7)
   }
 
   .wheelWrap{text-align:center}
-  .pointer{width:0;height:0;margin:0 auto 10px;border-left:14px solid transparent;border-right:14px solid transparent;border-top:22px solid #fff;filter:drop-shadow(0 10px 12px rgba(0,0,0,.35))}
-  canvas{width:100%;max-width:420px;border-radius:50%;box-shadow:0 18px 45px rgba(0,0,0,.4);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}
-
-  .pickedBox{
-    margin-top:10px;
-    padding:10px 12px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(0,0,0,.18);
-    font-size:13px;color:rgba(255,255,255,.92);
+  .pointer{
+    width:0;height:0;margin:0 auto 10px;
+    border-left:14px solid transparent;border-right:14px solid transparent;
+    border-top:22px solid #fff
   }
-  .pickedName{font-weight:950;letter-spacing:.6px}
+  canvas{
+    width:100%;max-width:420px;border-radius:50%;
+    box-shadow:0 18px 45px rgba(0,0,0,.4);
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)
+  }
 
-  .hidden{display:none !important}
+  .hidden{display:none!important}
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
@@ -79,30 +107,23 @@
     <div class="logo">🎁</div>
     <div>
       <h1>FAMILIA OLAYA</h1>
-      <p>Regalo Secreto 2025 – cada persona juega 1 vez</p>
+      <p>Regalo Secreto 2025 – cada persona juega una sola vez</p>
     </div>
   </header>
 
   <div class="grid">
     <section class="card">
-      <h2>👤 Participante</h2>
-      <p class="help">Toca tu nombre una sola vez. Luego gira la ruleta. Al finalizar, la lista desaparece para evitar que juegues con otro nombre.</p>
+      <h2>👤 Selecciona tu nombre</h2>
+      <p class="help">Toca tu nombre y luego gira la ruleta. Al finalizar, la lista desaparecerá.</p>
 
-      <div class="pickedBox" id="pickedBox">
-        Seleccionado: <span class="pickedName" id="pickedName">Ninguno</span>
-      </div>
-
-      <div class="row">
-        <button id="spinBtn" disabled>🎡 GIRAR RULETA</button>
-      </div>
+      <button id="spinBtn" disabled>🎡 GIRAR RULETA</button>
 
       <div class="bigResult">
-        <h3>RESULTADO</h3>
         <div class="resultLine" id="resultText">Selecciona tu nombre para empezar</div>
       </div>
 
       <div class="participants" id="participantsPanel">
-        <h4>📜 PARTICIPANTES (TOCA TU NOMBRE)</h4>
+        <h4>Participantes</h4>
         <div class="list" id="plist"></div>
       </div>
     </section>
@@ -117,166 +138,107 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ TU API
-  const API_URL = "https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
 
-  // ✅ Nombres EXACTOS (igual que en Sheet participants)
-  const FAMILY = ["MariaC","Nathalia","Sebas","CarlosH","PAPA","Paola","Valeria","Juancho","Jaime","Luna","Mama Luna"];
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbwgrT9UEdOUGCTJhYR9jamo-TYJ7lDHuYPqR8ZrJS0-rzDZq9RSqwkPwv5PEKabLbu97g/exec";
+
+  // ✅ LISTA ACTUALIZADA
+  const FAMILY = [
+    "MariaC",
+    "Nathalia",
+    "Viviana",
+    "CarlosH",
+    "CarlosA",
+    "Paola",
+    "Valeria",
+    "Juanito",
+    "Jaime",
+    "Luna",
+    "Freddy",
+    "Sebas"
+  ];
 
   const spinBtn = document.getElementById("spinBtn");
   const resultEl = document.getElementById("resultText");
   const plist = document.getElementById("plist");
+  const panel = document.getElementById("participantsPanel");
   const canvas = document.getElementById("wheel");
   const ctx = canvas.getContext("2d");
 
-  const pickedBox = document.getElementById("pickedBox");
-  const pickedNameEl = document.getElementById("pickedName");
-  const participantsPanel = document.getElementById("participantsPanel");
+  let selected="", spinning=false, rot=0;
 
-  let selectedGiver = "";
-  let selectedChip = null;
-
-  function normalize(s){
-    return (s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  function norm(s){
+    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   }
 
-  // ===== RUEDA =====
-  let rot=0, spinning=false;
-
-  function drawWheel(rotation, hiIdx=-1){
-    const r = canvas.width/2;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.save();
-    ctx.translate(r,r);
-    ctx.rotate(rotation);
-
-    const ang = 2*Math.PI / FAMILY.length;
-
-    for(let i=0;i<FAMILY.length;i++){
-      const start=i*ang, end=(i+1)*ang;
-      const isHi=i===hiIdx;
-      const radius=isHi ? r*0.93 : r*0.90;
-      const hue=i*360/FAMILY.length;
-
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.arc(0,0,radius,start,end);
-      ctx.closePath();
-      ctx.fillStyle=`hsl(${hue},80%,${isHi?"62%":"55%"})`;
-      ctx.fill();
-
-      ctx.lineWidth=isHi?6:2;
-      ctx.strokeStyle=isHi?"rgba(255,255,255,.95)":"rgba(255,255,255,.22)";
-      ctx.stroke();
-
-      ctx.save();
-      ctx.rotate(start + ang/2);
-      ctx.fillStyle="#fff";
-      ctx.font=isHi?"900 18px system-ui":"bold 16px system-ui";
-      ctx.textAlign="right";
-      ctx.fillText(FAMILY[i], radius*0.92, 6);
-      ctx.restore();
-    }
-
-    ctx.restore();
-  }
-  drawWheel(rot);
-
-  function easeOutQuint(t){ return 1 - Math.pow(1-t,5); }
-
-  async function api(action, giver){
-    const url = `${API_URL}?action=${encodeURIComponent(action)}&giver=${encodeURIComponent(giver)}&ts=${Date.now()}`;
-    const r = await fetch(url, { cache:"no-store", redirect:"follow" });
-    if(!r.ok) throw new Error(`HTTP ${r.status} consultando API`);
-    return r.json();
-  }
-
-  async function getOrCreateAssignment(giver){
-    const j1 = await api("get", giver);
-    if(j1.ok && j1.assignment) return j1.assignment;
-
-    const j2 = await api("spin", giver);
-    if(!j2.ok) throw new Error(j2.error || "Error API");
-    return j2.assignment;
-  }
-
-  // ===== CHIPS: seleccionar nombre (sin input) =====
-  plist.innerHTML = "";
   FAMILY.forEach(n=>{
     const c=document.createElement("div");
     c.className="chip";
     c.textContent=n;
-
-    c.onclick = () => {
-      if(spinning) return; // si está girando, no tocar
-      // marcar seleccionado
-      if(selectedChip) selectedChip.classList.remove("selected");
-      selectedChip = c;
+    c.onclick=()=>{
+      document.querySelectorAll(".chip").forEach(x=>x.classList.remove("selected"));
       c.classList.add("selected");
-
-      selectedGiver = n;
-      pickedNameEl.textContent = n;
-      spinBtn.disabled = false;
-      resultEl.textContent = "Listo. Ahora gira la ruleta 🎡";
+      selected=n;
+      spinBtn.disabled=false;
+      resultEl.textContent="Listo. Ahora gira la ruleta 🎡";
     };
-
     plist.appendChild(c);
   });
 
-  // ===== SPIN =====
-  spinBtn.onclick = async ()=>{
+  function drawWheel(angle, hi=-1){
+    const r=canvas.width/2;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();ctx.translate(r,r);ctx.rotate(angle);
+    const a=2*Math.PI/FAMILY.length;
+    FAMILY.forEach((n,i)=>{
+      ctx.beginPath();ctx.moveTo(0,0);
+      ctx.arc(0,0,r*0.9,i*a,(i+1)*a);ctx.closePath();
+      ctx.fillStyle=`hsl(${i*360/FAMILY.length},80%,55%)`;
+      ctx.fill();
+      ctx.save();ctx.rotate(i*a+a/2);
+      ctx.fillStyle="#fff";ctx.textAlign="right";
+      ctx.font="bold 15px system-ui";
+      ctx.fillText(n,r*0.85,6);
+      ctx.restore();
+    });
+    ctx.restore();
+  }
+  drawWheel(rot);
+
+  async function api(action,g){
+    const u=`${API_URL}?action=${action}&giver=${encodeURIComponent(g)}&t=${Date.now()}`;
+    const r=await fetch(u,{cache:"no-store"});
+    return r.json();
+  }
+
+  spinBtn.onclick=async()=>{
     if(spinning) return;
-    if(!selectedGiver){
-      alert("Primero selecciona tu nombre.");
-      return;
-    }
+    spinning=true; spinBtn.disabled=true;
+    resultEl.textContent="Consultando servidor...";
 
-    try{
-      spinning=true;
-      spinBtn.disabled=true;
-      resultEl.textContent="Consultando servidor...";
+    let r=await api("get",selected);
+    if(!r.assignment) r=await api("spin",selected);
 
-      const assignment = await getOrCreateAssignment(selectedGiver);
-      const receiver = assignment.receiver;
+    const rec=r.assignment.receiver;
+    const idx=FAMILY.findIndex(n=>norm(n)===norm(rec));
 
-      const idx = FAMILY.findIndex(n => normalize(n)===normalize(receiver));
-      if(idx < 0) throw new Error("El receptor devuelto por el servidor no está en la lista local.");
+    const a=2*Math.PI/FAMILY.length;
+    const target=(idx+0.5)*a;
+    const start=rot,end=rot+10*(2*Math.PI)+(Math.PI*1.5-target);
+    const t0=performance.now(),d=5200;
 
-      // giro 5+ segundos
-      const ang=2*Math.PI/FAMILY.length;
-      const targetCenter=(idx+0.5)*ang;
-      const start=rot;
-      const end=rot + 10*(2*Math.PI) + (Math.PI*1.5 - targetCenter);
-      const dur=5200;
-      const t0=performance.now();
-
-      const anim=(now)=>{
-        const p=Math.min(1,(now-t0)/dur);
-        rot=start+(end-start)*easeOutQuint(p);
-        drawWheel(rot,-1);
-        if(p<1) requestAnimationFrame(anim);
-        else{
-          drawWheel(rot,idx);
-
-          resultEl.innerHTML =
-            `<b>${selectedGiver.toUpperCase()}</b> debe dar regalo a <span class="receiver">${receiver.toUpperCase()}</span>`;
-
-          // ✅ ocultar lista de nombres para que NO puedan elegir otro
-          participantsPanel.classList.add("hidden");
-          pickedBox.innerHTML = `✅ Ya jugaste como <span class="pickedName">${selectedGiver}</span>. ¡Felices fiestas! 🎄`;
-
-          spinning=false;
-        }
-      };
-      requestAnimationFrame(anim);
-
-    }catch(err){
-      spinning=false;
-      spinBtn.disabled=false;
-      resultEl.textContent="ERROR: " + (err && err.message ? err.message : err);
-    }
+    (function anim(t){
+      const p=Math.min(1,(t-t0)/d);
+      rot=start+(end-start)*(1-Math.pow(1-p,5));
+      drawWheel(rot);
+      if(p<1) requestAnimationFrame(anim);
+      else{
+        drawWheel(rot);
+        resultEl.innerHTML=`<b>${selected}</b> debe dar regalo a <span class="receiver">${rec}</span>`;
+        panel.classList.add("hidden");
+      }
+    })(t0);
   };
-
 });
 </script>
 </body>
